@@ -1,0 +1,15 @@
+PODS:
+  - Alamofire (4.4.0)
+  - lottie-ios (1.5.1)
+
+DEPENDENCIES:
+  - Alamofire (~> 4.4)
+  - lottie-ios
+
+SPEC CHECKSUMS:
+  Alamofire: dc44b1600b800eb63da6a19039a0083d62a6a62d
+  lottie-ios: f680a7c4cb7a567ecf258fde0f967913aff111b8
+
+PODFILE CHECKSUM: 04aa30c8d682e0f1c4b67512292066d4f8c8f86a
+
+COCOAPODS: 1.2.0
