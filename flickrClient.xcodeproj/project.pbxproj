@@ -78,6 +78,10 @@
 		C33F74F31EABFB25005A102D /* flickrClient */ = {
 			isa = PBXGroup;
 			children = (
+				C33F75081EABFC41005A102D /* Model */,
+				C33F75071EABFC3B005A102D /* View */,
+				C33F75061EABFC33005A102D /* Controller */,
+				C33F75091EABFC47005A102D /* Animations */,
 				C33F74F41EABFB25005A102D /* AppDelegate.swift */,
 				C33F74F61EABFB25005A102D /* ViewController.swift */,
 				C33F74F81EABFB25005A102D /* Main.storyboard */,
@@ -86,6 +90,34 @@
 				C33F75001EABFB25005A102D /* Info.plist */,
 			);
 			path = flickrClient;
+			sourceTree = "<group>";
+		};
+		C33F75061EABFC33005A102D /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Controller;
+			sourceTree = "<group>";
+		};
+		C33F75071EABFC3B005A102D /* View */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = View;
+			sourceTree = "<group>";
+		};
+		C33F75081EABFC41005A102D /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
+		C33F75091EABFC47005A102D /* Animations */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Animations;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -377,6 +409,7 @@
 				C33F75051EABFB25005A102D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
