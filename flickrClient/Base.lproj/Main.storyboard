@@ -10,10 +10,10 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--MainVC-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController automaticallyAdjustsScrollViewInsets="NO" id="BYZ-38-t0r" customClass="ViewController" customModule="flickrClient" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController automaticallyAdjustsScrollViewInsets="NO" id="BYZ-38-t0r" customClass="MainVC" customModule="flickrClient" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
@@ -65,7 +65,7 @@
                                 <rect key="frame" x="0.0" y="104" width="375" height="563"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="373" id="lPc-OY-8WS">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="postCell" rowHeight="373" id="lPc-OY-8WS" customClass="postCell" customModule="flickrClient" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="373"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="lPc-OY-8WS" id="Fi9-zy-uqv">
@@ -116,6 +116,12 @@
                                                 <constraint firstItem="w22-RX-iZX" firstAttribute="top" secondItem="Fi9-zy-uqv" secondAttribute="topMargin" id="soV-hk-AGa"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="postDate" destination="WkY-rc-nkd" id="5xS-I2-6Bu"/>
+                                            <outlet property="postImage" destination="1bQ-VA-6gl" id="F2n-aG-y4T"/>
+                                            <outlet property="profileImage" destination="w22-RX-iZX" id="LiA-gQ-wnk"/>
+                                            <outlet property="userName" destination="5nu-xL-zlm" id="5oy-Mo-Oau"/>
+                                        </connections>
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
