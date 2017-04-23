@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 
 class Post {
     //Variables
@@ -16,6 +17,13 @@ class Post {
     private var _secret: String!
     private var _server: String!
     private var _farm : Int!
+    
+    
+    var postImage: UIImage!
+    var profileImage: UIImage!
+    var realname: String!
+    var iconfarm: Int!
+    var iconserver: String!
     
     
     var id: String {

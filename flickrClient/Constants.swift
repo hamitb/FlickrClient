@@ -15,3 +15,4 @@ let API_KEY     = "&api_key=3d9147aee7458c094b9cc286f04dbb42"
 let FORMAT      = "&per_page=10&format=json&nojsoncallback=1"
 
 typealias DownloadComplete = () -> ()
+

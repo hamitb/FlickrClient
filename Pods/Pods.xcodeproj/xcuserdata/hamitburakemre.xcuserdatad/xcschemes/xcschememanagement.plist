@@ -9,7 +9,17 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>AlamofireImage.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>Pods-flickrClient.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>PromiseKit.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
@@ -27,12 +37,22 @@
 			<key>primary</key>
 			<true/>
 		</dict>
+		<key>9EFE4C70245EE2857D336B8B9FA4E825</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>B5C29066B32BC3DBA7CD2538B4ED3A47</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>D511B61EDE10A38196EC89A1ED2E94AD</key>
+		<key>B71D312F3BECA9E62D96D8F180ACF26B</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>DA3A3FB44125C5CA6D8252BBB17B8CC7</key>
 		<dict>
 			<key>primary</key>
 			<true/>

@@ -1,15 +1,32 @@
 PODS:
   - Alamofire (4.4.0)
+  - AlamofireImage (3.2.0):
+    - Alamofire (~> 4.1)
   - lottie-ios (1.5.1)
+  - PromiseKit (4.1.7):
+    - PromiseKit/Foundation (= 4.1.7)
+    - PromiseKit/QuartzCore (= 4.1.7)
+    - PromiseKit/UIKit (= 4.1.7)
+  - PromiseKit/CorePromise (4.1.7)
+  - PromiseKit/Foundation (4.1.7):
+    - PromiseKit/CorePromise
+  - PromiseKit/QuartzCore (4.1.7):
+    - PromiseKit/CorePromise
+  - PromiseKit/UIKit (4.1.7):
+    - PromiseKit/CorePromise
 
 DEPENDENCIES:
   - Alamofire (~> 4.4)
+  - AlamofireImage (~> 3.1)
   - lottie-ios
+  - PromiseKit (~> 4.0)
 
 SPEC CHECKSUMS:
   Alamofire: dc44b1600b800eb63da6a19039a0083d62a6a62d
+  AlamofireImage: 157ed682cc81d3b9db4fb90c1f12180ac552d93b
   lottie-ios: f680a7c4cb7a567ecf258fde0f967913aff111b8
+  PromiseKit: 779f2e41faf62d854e7593026ddbcb0bb5c5002d
 
-PODFILE CHECKSUM: 04aa30c8d682e0f1c4b67512292066d4f8c8f86a
+PODFILE CHECKSUM: 8e493615b92f95560e6373d549e82fd39170dea6
 
 COCOAPODS: 1.2.0
