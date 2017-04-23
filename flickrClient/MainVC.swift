@@ -136,27 +136,28 @@ class MainVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UISc
                 
                 Alamofire.request(dataURL).responseJSON { response in
                     let result = response.result
-                    print("ZYX: Downloading profile data")
+                    
                     if let dict = result.value as? Dictionary<String, AnyObject> {
-                        
+                        print("QQQ")
+                        print(result.value)
                         if let person = dict["person"] as? Dictionary<String, AnyObject> {
-                            
-                            if let realnameDict = person["realname"] as? Dictionary<String, AnyObject> {
-                                if let usernameDict = person["username"] as? Dictionary<String, AnyObject> {
-                                    if let username = usernameDict["_content"] as? String {
-                                        
-                                        if let realname = realnameDict["_content"] as? String {
-                                            if(realname == ""){
-                                                post.realname = username
-                                            } else {
-                                                post.realname = realname
-                                            }
-                                        }
+                            print("ZYX: Downloading profile data")
+                            if let usernameDict = person["username"] as? Dictionary<String, AnyObject> {
+                                var nameText = ""
+                                if let realnameDict = person["realname"] as? Dictionary<String, AnyObject> {
+                                    if let realname = realnameDict["_content"] as? String {
+                                        nameText = realname
                                     }
-                                    
+                                }
+                                
+                                if (nameText == "") {
+                                    if let username = usernameDict["_content"] as? String {
+                                        nameText = username
+                                    }
                                 }
                                 
                                 
+                                post.realname = nameText
                             }
                             
                             if let iconF = person["iconfarm"] as? Int {
@@ -185,16 +186,12 @@ class MainVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UISc
                     let result = response.result
                     
                     if let dict = result.value as? Dictionary<String, AnyObject> {
-                        print("HMT: \(dataURL.absoluteString)")
                         if let photos = dict["photo"] as? Dictionary<String, AnyObject> {
                             if let dates = photos["dates"] as? Dictionary<String, AnyObject> {
                                 
-                                print("HMT: \(dates)")
                                 if let date = dates["posted"] as? String {
-                                    print("ZYX: \(date)")
                                     let dateInt = Int(date)
                                     post.date = self.dateString(givenDate: dateInt!)
-                                    print("ZYX: \(post.date)")
                                 }
                                 
                             }
