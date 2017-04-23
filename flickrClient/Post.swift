@@ -24,6 +24,8 @@ class Post {
     var realname: String!
     var iconfarm: Int!
     var iconserver: String!
+    var date: String!
+    var tags = [String]()
     
     
     var id: String {

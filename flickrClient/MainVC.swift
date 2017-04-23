@@ -9,13 +9,19 @@
 import UIKit
 import Alamofire
 import AlamofireImage
+import DateToolsSwift
+import Lottie
 
-class MainVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class MainVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIScrollViewDelegate {
     
     //VARIABLES AND OUTLETS
     var posts = [Post]()
     var profileImage: UIImage!
     var postImage: UIImage!
+    var page: Int = 1
+    var perPage: Int = 10
+    var isMoreDataLoading: Bool = false
+    var loadingMoreView: InfiniteScrollActivityView?
     
     @IBOutlet weak var tableView: UITableView!
     
@@ -27,8 +33,18 @@ class MainVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         tableView.dataSource = self
         
         downloadAllData {
-            print("ZYX: Done")
+            self.refreshUI()
         }
+        
+        // Set up Infinite Scroll loading indicator
+        let frame = CGRect(x: 0, y: tableView.contentSize.height, width: tableView.bounds.size.width, height: InfiniteScrollActivityView.defaultHeight)
+        loadingMoreView = InfiniteScrollActivityView(frame: frame)
+        loadingMoreView!.isHidden = true
+        tableView.addSubview(loadingMoreView!)
+        
+        var insets = tableView.contentInset
+        insets.bottom += InfiniteScrollActivityView.defaultHeight
+        tableView.contentInset = insets
         
     }
     //TABLE VIEW FUNCTIONS
@@ -37,12 +53,11 @@ class MainVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        //return posts.count
-        return 1
+        return posts.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        /*
+        
         if let cell = tableView.dequeueReusableCell(withIdentifier: "postCell", for: indexPath) as? postCell{
             let post = posts[indexPath.row]
             cell.configureCell(post: post)
@@ -50,8 +65,7 @@ class MainVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         } else {
             return postCell()
         }
-        */
-        return UITableViewCell()
+ 
     }
 
     //DOWNLOAD PHOTOS
@@ -59,8 +73,10 @@ class MainVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         downloadInitialData {
             self.downloadProfileImagesData {
                 self.downloadProfileImages {
-                    self.downloadPostImages {
-                        completed()
+                    self.downloadPostImagesData {
+                        self.downloadPostImages {
+                            completed()
+                        }
                     }
                 }
             }
@@ -69,7 +85,7 @@ class MainVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     }
     func downloadInitialData(completed: @escaping DownloadComplete) {
         print("ZYX: downloadData")
-        let photosURL = URL(string:"\(BASE_URL)\(GET_RECENT)\(API_KEY)\(FORMAT)")!
+        let photosURL = URL(string:"\(BASE_URL)\(GET_RECENT)\(API_KEY)\(FORMAT)&per_page=\(perPage)&page=\(page)")!
         
         Alamofire.request(photosURL).responseJSON{ response in
             let result = response.result
@@ -96,16 +112,18 @@ class MainVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     func downloadPostImages(completed: @escaping DownloadComplete) {
         print("ZYX: downloadPostImages")
         for post in posts {
-            let photoURL = URL(string: (self.getPostImageURL(farm: post.farm , server: post.server, id: post.id , secret: post.secret)))!
-            
-            Alamofire.request(photoURL).responseImage { response in
+            if (post.postImage == nil){
+                let photoURL = URL(string: (self.getPostImageURL(farm: post.farm , server: post.server, id: post.id , secret: post.secret)))!
                 
-                if let image = response.result.value {
-                    print("ZYX: Post Images downloaded")
-                    post.postImage = image
+                Alamofire.request(photoURL).responseImage { response in
+                    
+                    if let image = response.result.value {
+                        print("ZYX: Post Images downloaded")
+                        post.postImage = image
+                    }
+                    print("HMT: \(self.AllPostImagesDownloaded())")
+                    if(self.AllPostImagesDownloaded()){completed()}
                 }
-                
-                if(self.AllPostImagesDownloaded()){completed()}
             }
         }
     }
@@ -113,32 +131,91 @@ class MainVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     func downloadProfileImagesData(completed: @escaping DownloadComplete) {
         print("ZYX: downloadProfileImagesData")
         for post in posts {
-            let dataURL = URL(string: "\(GET_USER)\(post.owner)\(API_KEY)\(FORMAT)")!
-            
-            Alamofire.request(dataURL).responseJSON { response in
-                let result = response.result
-                print("ZYX: Downloading profile data")
-                if let dict = result.value as? Dictionary<String, AnyObject> {
-
-                    if let person = dict["person"] as? Dictionary<String, AnyObject> {
-    
-                        if let realname = person["realname"] as? Dictionary<String, AnyObject> {
+            if (post.iconserver == nil){
+                let dataURL = URL(string: "\(GET_USER)\(post.owner)\(API_KEY)\(FORMAT)")!
+                
+                Alamofire.request(dataURL).responseJSON { response in
+                    let result = response.result
+                    print("ZYX: Downloading profile data")
+                    if let dict = result.value as? Dictionary<String, AnyObject> {
+                        
+                        if let person = dict["person"] as? Dictionary<String, AnyObject> {
                             
-                            if let content = realname["_content"] as? String {
-                                post.realname = content
+                            if let realnameDict = person["realname"] as? Dictionary<String, AnyObject> {
+                                if let usernameDict = person["username"] as? Dictionary<String, AnyObject> {
+                                    if let username = usernameDict["_content"] as? String {
+                                        
+                                        if let realname = realnameDict["_content"] as? String {
+                                            if(realname == ""){
+                                                post.realname = username
+                                            } else {
+                                                post.realname = realname
+                                            }
+                                        }
+                                    }
+                                    
+                                }
+                                
+                                
+                            }
+                            
+                            if let iconF = person["iconfarm"] as? Int {
+                                post.iconfarm = iconF
+                            }
+                            
+                            if let iconS = person["iconserver"] as? String {
+                                post.iconserver = iconS
                             }
                         }
-                        
-                        if let iconF = person["iconfarm"] as? Int {
-                            post.iconfarm = iconF
-                        }
-                        
-                        if let iconS = person["iconserver"] as? String {
-                            post.iconserver = iconS
+                    }
+                    if(self.AllProfileDataDownloaded()){completed()}
+                }
+            }
+        }
+        
+    }
+    
+    func downloadPostImagesData(completed: @escaping DownloadComplete) {
+        print("ZYX: downloadPostImagesData")
+        for post in posts {
+            if (post.date == nil){
+                let dataURL = URL(string: "\(GET_INFO)\(post.id)\(API_KEY)\(FORMAT)")!
+                
+                Alamofire.request(dataURL).responseJSON { response in
+                    let result = response.result
+                    
+                    if let dict = result.value as? Dictionary<String, AnyObject> {
+                        print("HMT: \(dataURL.absoluteString)")
+                        if let photos = dict["photo"] as? Dictionary<String, AnyObject> {
+                            if let dates = photos["dates"] as? Dictionary<String, AnyObject> {
+                                
+                                print("HMT: \(dates)")
+                                if let date = dates["posted"] as? String {
+                                    print("ZYX: \(date)")
+                                    let dateInt = Int(date)
+                                    post.date = self.dateString(givenDate: dateInt!)
+                                    print("ZYX: \(post.date)")
+                                }
+                                
+                            }
+                            
+                            if let tagDict = dict["tags"] as? Dictionary<String, AnyObject> {
+                                
+                                if let tags = tagDict["tag"] as? [Dictionary<String, AnyObject>] {
+                                    
+                                    for tag in tags {
+                                        
+                                        post.tags.append(tag["_content"] as! String)
+                                        
+                                    }
+                                }
+                            }
+
                         }
                     }
+                
+                    if(self.AllPostImagesDataDownloaded()){completed()}
                 }
-                if(self.AllProfileDataDownloaded()){completed()}
             }
         }
         
@@ -149,19 +226,21 @@ class MainVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     func downloadProfileImages(completed: @escaping DownloadComplete) {
         print("ZYX: downloadProfileImages")
         for post in posts {
-            let profileURL = URL(string: (self.getProfileImageURL(farm: post.iconfarm, server: post.iconserver, owner: post.owner)))!
-            
-            Alamofire.request(profileURL).responseImage { response in
+            if (post.profileImage == nil){
+                let profileURL = URL(string: (self.getProfileImageURL(farm: post.iconfarm, server: post.iconserver, owner: post.owner)))!
                 
-                if let image = response.result.value {
-                    print("ZYX: Profile image added")
-                    post.profileImage = image
-                } else {
-                    print("ZYX: Profile image added")
-                    post.profileImage = UIImage(named: "default_profile")
+                Alamofire.request(profileURL).responseImage { response in
+                    
+                    if let image = response.result.value {
+                        print("ZYX: Profile image added")
+                        post.profileImage = image
+                    } else {
+                        print("ZYX: Profile image added")
+                        post.profileImage = UIImage(named: "default_profile")
+                    }
+                    
+                    if(self.AllProfileImagesDownloaded()){completed()}
                 }
-                
-                if(self.AllProfileImagesDownloaded()){completed()}
             }
         }
         
@@ -187,6 +266,16 @@ class MainVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         return true
     }
     
+    func AllPostImagesDataDownloaded() -> Bool {
+        for post in posts {
+            if(post.date == nil){
+                return false
+            }
+        }
+        
+        return true
+    }
+    
     func AllProfileDataDownloaded() -> Bool {
         for post in posts {
             if (post.iconserver == nil){
@@ -204,6 +293,48 @@ class MainVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     func getProfileImageURL(farm: Int, server: String, owner: String) -> String {
         return "http://farm\(farm).staticflickr.com/\(server)/buddyicons/\(owner).jpg"
+    }
+    
+    
+    //INFINITE SCROLL & ANIMATIONS
+    
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if(!isMoreDataLoading) {
+            let scrollViewContentHeight = tableView.contentSize.height
+            let scrollOffsetThreshold = scrollViewContentHeight - tableView.bounds.size.height
+            
+            if(scrollView.contentOffset.y > scrollOffsetThreshold && tableView.isDragging) {
+                isMoreDataLoading = true
+                
+                let frame = CGRect(x: 0,
+                                   y: tableView.contentSize.height,
+                                   width: tableView.bounds.size.width,
+                                   height: InfiniteScrollActivityView.defaultHeight)
+                loadingMoreView?.frame = frame
+                loadingMoreView!.startAnimating()
+                
+                page += 1
+                downloadAllData {
+                    self.loadingMoreView!.stopAnimating()
+                    self.isMoreDataLoading = false
+                    self.refreshUI()
+                }
+            }
+            
+        }
+    }
+    
+    func refreshUI() {
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
+    }
+    
+    func dateString(givenDate: Int) -> String {
+        let date = Date(timeIntervalSince1970: TimeInterval(givenDate))
+        
+        return "\(date.shortTimeAgoSinceNow)"
     }
 
 

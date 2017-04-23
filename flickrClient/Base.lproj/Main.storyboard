@@ -79,7 +79,7 @@
                                                         <constraint firstAttribute="height" constant="40" id="uf8-Pm-Qs8"/>
                                                     </constraints>
                                                 </imageView>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5nu-xL-zlm">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5nu-xL-zlm" userLabel="Name">
                                                     <rect key="frame" x="56" y="18" width="0.0" height="24"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="24" id="eb7-wL-8Cq"/>
@@ -120,7 +120,7 @@
                                             <outlet property="postDate" destination="WkY-rc-nkd" id="5xS-I2-6Bu"/>
                                             <outlet property="postImage" destination="1bQ-VA-6gl" id="F2n-aG-y4T"/>
                                             <outlet property="profilePic" destination="w22-RX-iZX" id="p3w-74-DCa"/>
-                                            <outlet property="userName" destination="5nu-xL-zlm" id="5oy-Mo-Oau"/>
+                                            <outlet property="realName" destination="5nu-xL-zlm" id="ucg-Nf-gEr"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>

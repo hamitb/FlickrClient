@@ -4,7 +4,7 @@ use_frameworks!
 
 target ‘flickrClient’ do
     pod 'Alamofire', '~> 4.4'
-    pod 'AlamofireImage’, '~> 3.1’
-    pod 'PromiseKit', '~> 4.0'
+    pod 'AlamofireImage', '~> 3.1’
     pod 'lottie-ios'
+    pod 'DateToolsSwift'
 end
