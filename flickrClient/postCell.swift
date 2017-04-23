@@ -45,8 +45,7 @@ class postCell: UITableViewCell {
     }
     
     func getUserProps (owner: String ,completed: @escaping DownloadComplete) {
-        let url = URL(string: "https://api.flickr.com/services/rest/?method=flickr.people.getInfo&user_id=\(owner)&api_key=3d9147aee7458c094b9cc286f04dbb42&format=json&nojsoncallback=1")!
-        print("XYZ:\(owner)")
+        let url = URL(string: "\(GET_USER)\(owner)\(API_KEY)\(FORMAT)")!
         Alamofire.request(url).responseJSON { response in
             let result = response.result
             
