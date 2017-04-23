@@ -11,11 +11,18 @@ import Alamofire
 
 class MainVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
-    // VARIABLES AND OUTLETS
+    //VARIABLES AND OUTLETS
     var posts = [Post]()
+    
+    @IBOutlet weak var tableView: UITableView!
+    
     //VIEW DID LOAD
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        tableView.delegate = self
+        tableView.dataSource = self
+        
         downloadPhotos {
             print("XYZ: Download completed")
         }
@@ -27,11 +34,19 @@ class MainVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+        print("XYZ: \(posts.count)")
+        return posts.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        return UITableViewCell()
+        
+        if let cell = tableView.dequeueReusableCell(withIdentifier: "postCell", for: indexPath) as? postCell{
+            let post = posts[indexPath.row]
+            cell.configureCell(post: post)
+            return cell
+        } else {
+            return postCell()
+        }
     }
 
     //DOWNLOAD PHOTOS
@@ -50,12 +65,12 @@ class MainVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
                         for photo in photos {
                             let post = Post(photoDict: photo)
                             self.posts.append(post)
-                            print(post.title)
                         }
-                        
+                        self.tableView.reloadData()
                     }
                 }
             }
+            completed()
         }
     }
     

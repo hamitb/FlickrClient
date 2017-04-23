@@ -11,6 +11,6 @@ import Foundation
 let BASE_URL    = "https://api.flickr.com/services/rest/?method="
 let GET_RECENT  = "flickr.photos.getRecent"
 let API_KEY     = "&api_key=3d9147aee7458c094b9cc286f04dbb42"
-let FORMAT      = "&format=json&nojsoncallback=1"
+let FORMAT      = "&per_page=10&format=json&nojsoncallback=1"
 
 typealias DownloadComplete = () -> ()

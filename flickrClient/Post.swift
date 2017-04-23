@@ -15,8 +15,7 @@ class Post {
     private var _owner: String!
     private var _secret: String!
     private var _server: String!
-    private var _farm : String!
-    private var _title: String!
+    private var _farm : Int!
     
     
     var id: String {
@@ -51,20 +50,12 @@ class Post {
         return _server
     }
     
-    var farm: String {
+    var farm: Int {
         if _farm == nil {
-            return ""
+            return -1
         }
         
         return _farm
-    }
-    
-    var title: String {
-        if _title == nil {
-            return ""
-        }
-        
-        return _title
     }
     
     
@@ -87,14 +78,9 @@ class Post {
             self._server = photoServer
         }
         
-        if let photoFarm = photoDict["farm"] as? String {
+        if let photoFarm = photoDict["farm"] as? Int {
             self._farm = photoFarm
         }
-        
-        if let photoTitle = photoDict["title"] as? String {
-            self._title = photoTitle
-        }
-        
     }
     
 }

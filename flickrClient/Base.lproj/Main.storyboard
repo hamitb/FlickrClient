@@ -61,41 +61,41 @@
                                 </constraints>
                                 <textInputTraits key="textInputTraits"/>
                             </searchBar>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="373" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="WrT-bB-dLz">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="380" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="WrT-bB-dLz">
                                 <rect key="frame" x="0.0" y="104" width="375" height="563"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="postCell" rowHeight="373" id="lPc-OY-8WS" customClass="postCell" customModule="flickrClient" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="28" width="375" height="373"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="postCell" rowHeight="380" id="lPc-OY-8WS" customClass="postCell" customModule="flickrClient" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="28" width="375" height="380"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="lPc-OY-8WS" id="Fi9-zy-uqv">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="373"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="380"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="pp_big" translatesAutoresizingMaskIntoConstraints="NO" id="w22-RX-iZX">
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="w22-RX-iZX" customClass="roundImageView" customModule="flickrClient" customModuleProvider="target">
                                                     <rect key="frame" x="8" y="8" width="40" height="40"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="40" id="H7s-H5-rxp"/>
                                                         <constraint firstAttribute="height" constant="40" id="uf8-Pm-Qs8"/>
                                                     </constraints>
                                                 </imageView>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Hamit Burak Emre" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5nu-xL-zlm">
-                                                    <rect key="frame" x="56" y="18" width="141" height="24"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5nu-xL-zlm">
+                                                    <rect key="frame" x="56" y="18" width="0.0" height="24"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="24" id="eb7-wL-8Cq"/>
                                                     </constraints>
-                                                    <fontDescription key="fontDescription" name="AvenirNext-Medium" family="Avenir Next" pointSize="17"/>
+                                                    <fontDescription key="fontDescription" name="AvenirNext-Medium" family="Avenir Next" pointSize="16"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="sample_img" translatesAutoresizingMaskIntoConstraints="NO" id="1bQ-VA-6gl">
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="1bQ-VA-6gl">
                                                     <rect key="frame" x="0.0" y="58" width="375" height="315"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="315" id="XQT-69-kbn"/>
                                                     </constraints>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2 days ago" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WkY-rc-nkd">
-                                                    <rect key="frame" x="302" y="18" width="65" height="24"/>
+                                                    <rect key="frame" x="302.5" y="18" width="64.5" height="24"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="24" id="T6j-1v-4C4"/>
                                                     </constraints>
@@ -106,7 +106,7 @@
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="WkY-rc-nkd" firstAttribute="top" secondItem="Fi9-zy-uqv" secondAttribute="topMargin" constant="10" id="Dyi-K7-j3h"/>
-                                                <constraint firstAttribute="bottom" secondItem="1bQ-VA-6gl" secondAttribute="bottom" id="Q3o-zW-Sf1"/>
+                                                <constraint firstItem="1bQ-VA-6gl" firstAttribute="top" secondItem="w22-RX-iZX" secondAttribute="bottom" constant="10" id="O20-BF-09h"/>
                                                 <constraint firstItem="w22-RX-iZX" firstAttribute="leading" secondItem="Fi9-zy-uqv" secondAttribute="leadingMargin" id="UK0-xl-23z"/>
                                                 <constraint firstAttribute="trailing" secondItem="1bQ-VA-6gl" secondAttribute="trailing" id="WcY-ss-yqh"/>
                                                 <constraint firstItem="5nu-xL-zlm" firstAttribute="leading" secondItem="w22-RX-iZX" secondAttribute="trailing" constant="8" id="a6z-3b-N1W"/>
@@ -119,7 +119,7 @@
                                         <connections>
                                             <outlet property="postDate" destination="WkY-rc-nkd" id="5xS-I2-6Bu"/>
                                             <outlet property="postImage" destination="1bQ-VA-6gl" id="F2n-aG-y4T"/>
-                                            <outlet property="profileImage" destination="w22-RX-iZX" id="LiA-gQ-wnk"/>
+                                            <outlet property="profilePic" destination="w22-RX-iZX" id="p3w-74-DCa"/>
                                             <outlet property="userName" destination="5nu-xL-zlm" id="5oy-Mo-Oau"/>
                                         </connections>
                                     </tableViewCell>
@@ -140,14 +140,13 @@
                             <constraint firstAttribute="trailing" secondItem="P63-ru-oob" secondAttribute="trailing" id="xjq-3C-fxL"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="tableView" destination="WrT-bB-dLz" id="pXj-MQ-rCD"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-42.399999999999999" y="123.68815592203899"/>
         </scene>
     </scenes>
-    <resources>
-        <image name="pp_big" width="836" height="908"/>
-        <image name="sample_img" width="1196" height="1190"/>
-    </resources>
 </document>
