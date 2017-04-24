@@ -12,7 +12,7 @@ import AlamofireImage
 import DateToolsSwift
 import Lottie
 
-class MainVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIScrollViewDelegate {
+class MainVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIScrollViewDelegate, UISearchBarDelegate {
     
     //VARIABLES AND OUTLETS
     var posts = [Post]()
@@ -20,23 +20,30 @@ class MainVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UISc
     var postImage: UIImage!
     var page: Int = 1
     var perPage: Int = 10
-    var isMoreDataLoading: Bool = false
+    var isMoreDataLoading: Bool!
     var loadingMoreView: InfiniteScrollActivityView?
+    var query: String = ""
+    var searching: Bool = false
     
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var searchBar: UISearchBar!
     
+
     //VIEW DID LOAD
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        
         tableView.delegate = self
         tableView.dataSource = self
+        searchBar.delegate = self
         
         downloadAllData {
             self.refreshUI()
         }
         
         // Set up Infinite Scroll loading indicator
+        isMoreDataLoading = false
         let frame = CGRect(x: 0, y: tableView.contentSize.height, width: tableView.bounds.size.width, height: InfiniteScrollActivityView.defaultHeight)
         loadingMoreView = InfiniteScrollActivityView(frame: frame)
         loadingMoreView!.isHidden = true
@@ -61,13 +68,58 @@ class MainVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UISc
         if let cell = tableView.dequeueReusableCell(withIdentifier: "postCell", for: indexPath) as? postCell{
             let post = posts[indexPath.row]
             cell.configureCell(post: post)
+            
             return cell
         } else {
             return postCell()
         }
  
     }
-
+    
+    //SEARCH BAR
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        query = searchBar.text!
+        
+        if(query == "") {
+            searching = false
+        } else {
+            searching = true
+            posts = []
+        }
+        
+        if(searching){
+            self.view.endEditing(true)
+            self.page = 1
+            downloadAllData {
+                self.refreshUI()
+                self.tableView.setContentOffset(CGPoint(x: 0.0, y: 0.0) , animated: false)
+            }
+        }
+        
+    }
+    
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        self.view.endEditing(true)
+    }
+    
+    @IBAction func homePressed(_ sender: Any) {
+        if (searching){
+            self.searchBar.text = ""
+            self.view.endEditing(true)
+            self.searching = false
+            self.posts = []
+            self.page = 1
+            
+            
+            downloadAllData {
+                self.refreshUI()
+                self.tableView.setContentOffset(CGPoint(x: 0.0, y: 0.0) , animated: false)
+            }
+        }
+    }
+    
+    
     //DOWNLOAD PHOTOS
     func downloadAllData(completed: @escaping DownloadComplete) {
         downloadInitialData {
@@ -85,7 +137,16 @@ class MainVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UISc
     }
     func downloadInitialData(completed: @escaping DownloadComplete) {
         print("ZYX: downloadData")
-        let photosURL = URL(string:"\(BASE_URL)\(GET_RECENT)\(API_KEY)\(FORMAT)&per_page=\(perPage)&page=\(page)")!
+        let url:String!
+        
+        if(!searching || query == "") {
+            url = "\(BASE_URL)\(GET_RECENT)\(API_KEY)\(FORMAT)&per_page=\(perPage)&page=\(page)"
+        } else {
+            query = query.replacingOccurrences(of: " ", with: "%20")
+            url = "\(BASE_URL)\(SEARCH)\(query)\(API_KEY)\(FORMAT)&per_page=\(perPage)&page=\(page)"
+        }
+        
+        let photosURL = URL(string: url)!
         
         Alamofire.request(photosURL).responseJSON{ response in
             let result = response.result
@@ -109,6 +170,7 @@ class MainVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UISc
         }
     }
     
+
     func downloadPostImages(completed: @escaping DownloadComplete) {
         print("ZYX: downloadPostImages")
         for post in posts {
@@ -138,8 +200,6 @@ class MainVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UISc
                     let result = response.result
                     
                     if let dict = result.value as? Dictionary<String, AnyObject> {
-                        print("QQQ")
-                        print(result.value)
                         if let person = dict["person"] as? Dictionary<String, AnyObject> {
                             print("ZYX: Downloading profile data")
                             if let usernameDict = person["username"] as? Dictionary<String, AnyObject> {
@@ -311,7 +371,7 @@ class MainVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UISc
                 loadingMoreView?.frame = frame
                 loadingMoreView!.startAnimating()
                 
-                page += 1
+                page = page + 1
                 downloadAllData {
                     self.loadingMoreView!.stopAnimating()
                     self.isMoreDataLoading = false

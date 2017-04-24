@@ -23,7 +23,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xV9-MG-AzQ">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="60"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="65"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IVx-fb-Lke" userLabel="Logo">
                                         <rect key="frame" x="145" y="25" width="85" height="30"/>
@@ -46,23 +46,40 @@
                                             <constraint firstAttribute="height" constant="30" id="zFq-XI-9e0"/>
                                         </constraints>
                                     </stackView>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HEc-mc-NHE">
+                                        <rect key="frame" x="8" y="23" width="32" height="32"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="32" id="UF5-AQ-qMQ"/>
+                                            <constraint firstAttribute="height" constant="32" id="Uus-l9-gCq"/>
+                                        </constraints>
+                                        <state key="normal" image="home"/>
+                                        <connections>
+                                            <action selector="homePressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="cJC-q8-Iy6"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" red="0.0" green="0.25098040700000002" blue="0.50196081400000003" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="60" id="FhG-fa-icl"/>
-                                    <constraint firstAttribute="bottom" secondItem="IVx-fb-Lke" secondAttribute="bottom" constant="5" id="LAX-PO-enu"/>
+                                    <constraint firstAttribute="height" constant="65" id="FhG-fa-icl"/>
+                                    <constraint firstAttribute="bottom" secondItem="IVx-fb-Lke" secondAttribute="bottom" constant="10" id="LAX-PO-enu"/>
+                                    <constraint firstItem="HEc-mc-NHE" firstAttribute="leading" secondItem="xV9-MG-AzQ" secondAttribute="leading" constant="8" id="SVo-zA-j3L"/>
+                                    <constraint firstAttribute="bottom" secondItem="HEc-mc-NHE" secondAttribute="bottom" constant="10" id="jjL-gQ-Rgc"/>
                                     <constraint firstItem="IVx-fb-Lke" firstAttribute="centerX" secondItem="xV9-MG-AzQ" secondAttribute="centerX" id="jqx-FY-35B"/>
                                 </constraints>
                             </view>
                             <searchBar contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="P63-ru-oob">
-                                <rect key="frame" x="0.0" y="60" width="375" height="44"/>
+                                <rect key="frame" x="0.0" y="65" width="375" height="44"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="44" id="ofy-VB-1wM"/>
                                 </constraints>
                                 <textInputTraits key="textInputTraits"/>
+                                <scopeButtonTitles>
+                                    <string>Title</string>
+                                    <string>Title</string>
+                                </scopeButtonTitles>
                             </searchBar>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="380" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="WrT-bB-dLz">
-                                <rect key="frame" x="0.0" y="104" width="375" height="563"/>
+                                <rect key="frame" x="0.0" y="109" width="375" height="558"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="postCell" rowHeight="380" id="lPc-OY-8WS" customClass="postCell" customModule="flickrClient" customModuleProvider="target">
@@ -88,8 +105,9 @@
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="1bQ-VA-6gl">
+                                                <imageView clipsSubviews="YES" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="1bQ-VA-6gl">
                                                     <rect key="frame" x="0.0" y="58" width="375" height="315"/>
+                                                    <gestureRecognizers/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="315" id="XQT-69-kbn"/>
                                                     </constraints>
@@ -141,6 +159,7 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="searchBar" destination="P63-ru-oob" id="paz-ZP-4qN"/>
                         <outlet property="tableView" destination="WrT-bB-dLz" id="pXj-MQ-rCD"/>
                     </connections>
                 </viewController>
@@ -149,4 +168,7 @@
             <point key="canvasLocation" x="-42.399999999999999" y="123.68815592203899"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="home" width="64" height="64"/>
+    </resources>
 </document>

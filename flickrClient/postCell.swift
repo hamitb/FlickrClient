@@ -27,8 +27,8 @@ class postCell: UITableViewCell {
     func configureCell(post: Post) {
         profilePic.image = post.profileImage
         realName.text = post.realname
-        postImage.image = post.postImage
         postDate.text = post.date
+        postImage.image = post.postImage
     }
     
     
