@@ -151,7 +151,7 @@ class MainVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UISc
             url = "\(BASE_URL)\(SEARCH)\(query)\(API_KEY)\(FORMAT)&per_page=\(perPage)&page=\(page)"
         }
         
-        let photosURL = URL(string: url)!
+        let photosURL = URL(string: url.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!)!
         
         Alamofire.request(photosURL).responseJSON{ response in
             let result = response.result
