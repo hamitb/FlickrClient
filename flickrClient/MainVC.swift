@@ -12,7 +12,7 @@ import AlamofireImage
 import DateToolsSwift
 import Lottie
 
-class MainVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIScrollViewDelegate, UISearchBarDelegate {
+class MainVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIScrollViewDelegate, UISearchBarDelegate{
     
     //VARIABLES AND OUTLETS
     var posts = [Post]()
@@ -29,6 +29,7 @@ class MainVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UISc
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var searchBar: UISearchBar!
     
+    @IBOutlet weak var collectionView: UICollectionView!
 
     //VIEW DID LOAD
     override func viewDidLoad() {
@@ -47,6 +48,8 @@ class MainVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UISc
         downloadAllData {
             self.stopInitialAnimation()
         }
+        
+        
         
         
         
@@ -105,6 +108,12 @@ class MainVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UISc
     
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         self.view.endEditing(true)
+    }
+    
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        let screenSize: CGRect = UIScreen.main.bounds
+        let myView = UIView(frame: CGRect(x: 0, y: 100, width: screenSize.width - 10, height: 10))
+        self.view.addSubview(myView)
     }
     
     @IBAction func homePressed(_ sender: Any) {
