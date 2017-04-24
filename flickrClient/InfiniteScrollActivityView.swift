@@ -31,7 +31,7 @@ class InfiniteScrollActivityView: UIView {
     }
     
     func setupActivityIndicator() {
-        animationView = LOTAnimationView(name: "preloader")
+        animationView = LOTAnimationView(name: "colorline")
         let frame = CGRect(x: self.bounds.size.width/2,
                            y: self.bounds.size.height/2,
                            width: 120,

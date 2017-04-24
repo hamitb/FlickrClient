@@ -22,6 +22,7 @@ class MainVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UISc
     var perPage: Int = 10
     var isMoreDataLoading: Bool!
     var loadingMoreView: InfiniteScrollActivityView?
+    var initialAnimation: InfiniteScrollActivityView?
     var query: String = ""
     var searching: Bool = false
     
@@ -38,22 +39,22 @@ class MainVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UISc
         tableView.dataSource = self
         searchBar.delegate = self
         
+        setupLoadingAnimation()
+        setupInitialAnimation()
+        
+        startInitialAnimation()
+        
         downloadAllData {
-            self.refreshUI()
+            self.stopInitialAnimation()
         }
         
-        // Set up Infinite Scroll loading indicator
-        isMoreDataLoading = false
-        let frame = CGRect(x: 0, y: tableView.contentSize.height, width: tableView.bounds.size.width, height: InfiniteScrollActivityView.defaultHeight)
-        loadingMoreView = InfiniteScrollActivityView(frame: frame)
-        loadingMoreView!.isHidden = true
-        tableView.addSubview(loadingMoreView!)
         
-        var insets = tableView.contentInset
-        insets.bottom += InfiniteScrollActivityView.defaultHeight
-        tableView.contentInset = insets
         
     }
+    
+    
+    
+    
     //TABLE VIEW FUNCTIONS
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
@@ -89,9 +90,12 @@ class MainVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UISc
         }
         
         if(searching){
+            self.refreshUI()
             self.view.endEditing(true)
             self.page = 1
+            startInitialAnimation()
             downloadAllData {
+                self.stopInitialAnimation()
                 self.refreshUI()
                 self.tableView.setContentOffset(CGPoint(x: 0.0, y: 0.0) , animated: false)
             }
@@ -110,9 +114,10 @@ class MainVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UISc
             self.searching = false
             self.posts = []
             self.page = 1
-            
-            
+            self.refreshUI()
+            startInitialAnimation()
             downloadAllData {
+                self.stopInitialAnimation()
                 self.refreshUI()
                 self.tableView.setContentOffset(CGPoint(x: 0.0, y: 0.0) , animated: false)
             }
@@ -355,6 +360,56 @@ class MainVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UISc
     
     //INFINITE SCROLL & ANIMATIONS
     
+    func setupLoadingAnimation() {
+        isMoreDataLoading = false
+        let frame = CGRect(x: 0, y: tableView.contentSize.height, width: tableView.bounds.size.width, height: InfiniteScrollActivityView.defaultHeight)
+        loadingMoreView = InfiniteScrollActivityView(frame: frame)
+        loadingMoreView!.isHidden = true
+        tableView.addSubview(loadingMoreView!)
+        
+        var insets = tableView.contentInset
+        insets.bottom += InfiniteScrollActivityView.defaultHeight
+        tableView.contentInset = insets
+    }
+    
+    func setupInitialAnimation() {
+        isMoreDataLoading = false
+        let frame = CGRect(x: 0,
+                           y: 140,
+                           width: tableView.bounds.size.width,
+                           height: InfiniteScrollActivityView.defaultHeight)
+        initialAnimation = InfiniteScrollActivityView(frame: frame)
+        initialAnimation!.isHidden = true
+        self.view.addSubview(initialAnimation!)
+    }
+    
+    func startInitialAnimation() {
+        isMoreDataLoading = true
+        initialAnimation!.startAnimating()
+    }
+    
+    func stopInitialAnimation() {
+        self.initialAnimation!.stopAnimating()
+        self.isMoreDataLoading = false
+        self.refreshUI()
+    }
+    
+    func startLoadingAnimation() {
+        isMoreDataLoading = true
+        let frame = CGRect(x: 0,
+                           y: tableView.contentSize.height+15,
+                           width: tableView.bounds.size.width,
+                           height: InfiniteScrollActivityView.defaultHeight)
+        loadingMoreView?.frame = frame
+        loadingMoreView!.startAnimating()
+    }
+    
+    func stopLoadingAnimation() {
+        self.loadingMoreView!.stopAnimating()
+        self.isMoreDataLoading = false
+        self.refreshUI()
+    }
+    
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if(!isMoreDataLoading) {
@@ -362,20 +417,10 @@ class MainVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UISc
             let scrollOffsetThreshold = scrollViewContentHeight - tableView.bounds.size.height
             
             if(scrollView.contentOffset.y > scrollOffsetThreshold && tableView.isDragging) {
-                isMoreDataLoading = true
-                
-                let frame = CGRect(x: 0,
-                                   y: tableView.contentSize.height,
-                                   width: tableView.bounds.size.width,
-                                   height: InfiniteScrollActivityView.defaultHeight)
-                loadingMoreView?.frame = frame
-                loadingMoreView!.startAnimating()
-                
+                startLoadingAnimation()
                 page = page + 1
                 downloadAllData {
-                    self.loadingMoreView!.stopAnimating()
-                    self.isMoreDataLoading = false
-                    self.refreshUI()
+                    self.stopLoadingAnimation()
                 }
             }
             
