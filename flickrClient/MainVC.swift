@@ -11,6 +11,7 @@ import Alamofire
 import AlamofireImage
 import DateToolsSwift
 import Lottie
+import PureLayout
 
 class MainVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIScrollViewDelegate, UISearchBarDelegate{
     
@@ -26,19 +27,23 @@ class MainVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UISc
     var query: String = ""
     var searching: Bool = false
     
-    @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var searchBar: UISearchBar!
+    var tableView: UITableView = UITableView()
+    var searchBar: UISearchBar = UISearchBar()
     
-    @IBOutlet weak var collectionView: UICollectionView!
+    var headerView = UIImageView()
+    var button = UIButton()
+
 
     //VIEW DID LOAD
     override func viewDidLoad() {
         super.viewDidLoad()
         
         
-        tableView.delegate = self
-        tableView.dataSource = self
-        searchBar.delegate = self
+        setupHeader()
+        setupButton()
+        setupLogo()
+        setupSearchBar()
+        setupTableView()
         
         setupLoadingAnimation()
         setupInitialAnimation()
@@ -48,17 +53,106 @@ class MainVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UISc
         downloadAllData {
             self.stopInitialAnimation()
         }
+    }
+    
+    
+    //VIEW SETUPS
+    
+    func setupHeader() {
+        let headerImage = #imageLiteral(resourceName: "background_darker")
+        headerView = UIImageView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 75))
+        headerView.clipsToBounds = true
+        headerView.image = headerImage
+        headerView.contentMode = .scaleAspectFill
+        headerView.isUserInteractionEnabled = true
+        self.view.addSubview(headerView)
+    }
+    
+    func setupButton() {
+        button = UIButton(frame: CGRect(x: 10, y: 10, width: 30, height: 30))
+        button.setImage(#imageLiteral(resourceName: "home"), for: .normal)
+        button.addTarget(self, action: #selector(self.homePressed(sender:)), for: .touchUpInside)
+        button.isUserInteractionEnabled = true
+        headerView.addSubview(button)
         
         
+        button.autoPinEdge(.left, to: .left, of: headerView, withOffset: 16)
+        button.autoPinEdge(.top, to: .top, of: headerView, withOffset: 30)
         
+        button.autoSetDimensions(to: CGSize(width: 32, height: 32))
         
         
     }
     
     
+    func homePressed(sender: UIButton!) {
+            if (searching){
+                self.searchBar.text = ""
+                self.view.endEditing(true)
+                self.searching = false
+                self.posts = []
+                self.page = 1
+                self.refreshUI()
+                startInitialAnimation()
+                downloadAllData {
+                    self.stopInitialAnimation()
+                    self.refreshUI()
+                    self.tableView.setContentOffset(CGPoint(x: 0.0, y: 0.0) , animated: false)
+                }
+            }
+    }
+    
+    func setupLogo() {
+        let logo1 = UILabel.newAutoLayout()
+        logo1.text = "flick"
+        logo1.font = UIFont(name: "AvenirNext-Bold", size: 34)
+        logo1.textColor = UIColor(red: 230.0/255.0, green: 230.0/255.0, blue: 230.0/255.0, alpha: 1)
+        headerView.addSubview(logo1)
+        
+        logo1.autoAlignAxis(.vertical, toSameAxisOf: headerView, withOffset: -5)
+        logo1.autoPinEdge(.top, to: .top, of: headerView, withOffset: 32)
+        logo1.autoSetDimensions(to: CGSize(width: 72, height: 30))
+        
+        let logo2 = UILabel.newAutoLayout()
+        logo2.text = "r"
+        logo2.font = UIFont(name: "AvenirNext-Bold", size: 34)
+        logo2.textColor = UIColor(red: 254.0/255.0, green: 0.0/255.0, blue: 134.0/255.0, alpha: 1)
+        headerView.addSubview(logo2)
+        
+        logo2.autoPinEdge(.left, to: .right, of: logo1, withOffset: -1.2)
+        logo2.autoPinEdge(.top, to: .top, of: headerView, withOffset: 32)
+        logo2.autoSetDimensions(to: CGSize(width: 13, height: 30))
+    }
+    
+    func setupSearchBar() {
+        searchBar.delegate = self
+        self.view.addSubview(searchBar)
+        searchBar.autoSetDimension(.height, toSize: 44.0)
+        searchBar.autoPinEdge(.top, to: .bottom, of: headerView)
+        searchBar.autoPinEdge(toSuperviewEdge: .leading, withInset: 0.0)
+        searchBar.autoPinEdge(toSuperviewEdge: .trailing, withInset: 0.0)
+        searchBar.barTintColor = UIColor(red: 234.0/255.0, green: 1.0/255.0, blue: 126.0/255.0, alpha: 1.0)
+    }
+    
+    func setupTableView() {
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.separatorStyle = .none
+        self.view.addSubview(tableView)
+        tableView.autoPinEdge(.top, to: .bottom, of: searchBar, withOffset: 0)
+        tableView.autoPinEdge(.bottom, to: .bottom, of: self.view, withOffset: 0)
+        tableView.autoPinEdge(.left, to: .left, of: self.view, withOffset: 0)
+        tableView.autoPinEdge(.right, to: .right, of: self.view, withOffset: 0)
+        tableView.allowsSelection = false
+        tableView.register(postCell.self, forCellReuseIdentifier: "postCell")
+    }
     
     
     //TABLE VIEW FUNCTIONS
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 375.0
+    }
+    
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
@@ -70,8 +164,12 @@ class MainVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UISc
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         if let cell = tableView.dequeueReusableCell(withIdentifier: "postCell", for: indexPath) as? postCell{
+            cell.updateFonts()
             let post = posts[indexPath.row]
             cell.configureCell(post: post)
+            
+            cell.setNeedsUpdateConstraints()
+            cell.updateConstraintsIfNeeded()
             
             return cell
         } else {
@@ -115,23 +213,7 @@ class MainVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UISc
         let myView = UIView(frame: CGRect(x: 0, y: 100, width: screenSize.width - 10, height: 10))
         self.view.addSubview(myView)
     }
-    
-    @IBAction func homePressed(_ sender: Any) {
-        if (searching){
-            self.searchBar.text = ""
-            self.view.endEditing(true)
-            self.searching = false
-            self.posts = []
-            self.page = 1
-            self.refreshUI()
-            startInitialAnimation()
-            downloadAllData {
-                self.stopInitialAnimation()
-                self.refreshUI()
-                self.tableView.setContentOffset(CGPoint(x: 0.0, y: 0.0) , animated: false)
-            }
-        }
-    }
+
     
     
     //DOWNLOAD PHOTOS
@@ -383,7 +465,7 @@ class MainVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UISc
     
     func setupInitialAnimation() {
         isMoreDataLoading = false
-        let frame = CGRect(x: 0,
+        let frame = CGRect(x: self.view.frame.width/2-10,
                            y: 140,
                            width: tableView.bounds.size.width,
                            height: InfiniteScrollActivityView.defaultHeight)
@@ -436,6 +518,8 @@ class MainVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UISc
         }
     }
     
+    //HELPER FUNCTIONS
+    
     func refreshUI() {
         DispatchQueue.main.async {
             self.tableView.reloadData()
@@ -447,7 +531,5 @@ class MainVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UISc
         
         return "\(date.shortTimeAgoSinceNow)"
     }
-
-
 }
 

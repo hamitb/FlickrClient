@@ -23,7 +23,6 @@
 		C363B64F1EAD26BF003A0C1E /* loading.json in Resources */ = {isa = PBXBuildFile; fileRef = C363B64E1EAD26BF003A0C1E /* loading.json */; };
 		C363B6511EAD2AE6003A0C1E /* preloader.json in Resources */ = {isa = PBXBuildFile; fileRef = C363B6501EAD2AE6003A0C1E /* preloader.json */; };
 		C363B6771EADB5A2003A0C1E /* colorline.json in Resources */ = {isa = PBXBuildFile; fileRef = C363B6761EADB5A2003A0C1E /* colorline.json */; };
-		C363B67E1EADD792003A0C1E /* popularCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C363B67D1EADD792003A0C1E /* popularCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -46,7 +45,6 @@
 		C363B64E1EAD26BF003A0C1E /* loading.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = loading.json; sourceTree = "<group>"; };
 		C363B6501EAD2AE6003A0C1E /* preloader.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = preloader.json; sourceTree = "<group>"; };
 		C363B6761EADB5A2003A0C1E /* colorline.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = colorline.json; sourceTree = "<group>"; };
-		C363B67D1EADD792003A0C1E /* popularCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = popularCell.swift; sourceTree = "<group>"; };
 		F6E461DA2E4DF08748CF35D3 /* Pods-flickrClient.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-flickrClient.release.xcconfig"; path = "Pods/Target Support Files/Pods-flickrClient/Pods-flickrClient.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -136,7 +134,6 @@
 				C33F750A1EAC12D5005A102D /* Constants.swift */,
 				C33F750F1EAC15C0005A102D /* postCell.swift */,
 				C363B63F1EAC1E90003A0C1E /* Post.swift */,
-				C363B67D1EADD792003A0C1E /* popularCell.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -289,7 +286,6 @@
 				C33F750B1EAC12D5005A102D /* Constants.swift in Sources */,
 				C33F75101EAC15C0005A102D /* postCell.swift in Sources */,
 				C363B6401EAC1E90003A0C1E /* Post.swift in Sources */,
-				C363B67E1EADD792003A0C1E /* popularCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

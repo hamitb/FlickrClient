@@ -7,5 +7,6 @@ target ‘flickrClient’ do
     pod 'AlamofireImage', '~> 3.1’
     pod 'lottie-ios'
     pod 'DateToolsSwift'
+    pod ‘PureLayout'
     
 end

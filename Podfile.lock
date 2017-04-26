@@ -4,19 +4,22 @@ PODS:
     - Alamofire (~> 4.1)
   - DateToolsSwift (2.0.3)
   - lottie-ios (1.5.1)
+  - PureLayout (3.0.2)
 
 DEPENDENCIES:
   - Alamofire (~> 4.4)
   - AlamofireImage (~> 3.1)
   - DateToolsSwift
   - lottie-ios
+  - PureLayout
 
 SPEC CHECKSUMS:
   Alamofire: dc44b1600b800eb63da6a19039a0083d62a6a62d
   AlamofireImage: 157ed682cc81d3b9db4fb90c1f12180ac552d93b
   DateToolsSwift: bf69bf9056d9e53c5c03f06e51f219b9b8b02f9e
   lottie-ios: f680a7c4cb7a567ecf258fde0f967913aff111b8
+  PureLayout: 4d550abe49a94f24c2808b9b95db9131685fe4cd
 
-PODFILE CHECKSUM: b4e3e877f9756627734a6dfe9ff28b7df30d109c
+PODFILE CHECKSUM: 3e883f0c75286926e151992dbf00839b6adaa746
 
 COCOAPODS: 1.2.0
