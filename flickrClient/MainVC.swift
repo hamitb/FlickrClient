@@ -17,6 +17,7 @@ class MainVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UISc
     
     //VARIABLES AND OUTLETS
     var posts = [Post]()
+    var tags  = [String]()
     var profileImage: UIImage!
     var postImage: UIImage!
     var page: Int = 1
@@ -28,6 +29,7 @@ class MainVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UISc
     var searching: Bool = false
     
     var tableView: UITableView = UITableView()
+    var popularTableView: UITableView = UITableView()
     var searchBar: UISearchBar = UISearchBar()
     
     var headerView = UIImageView()
@@ -44,6 +46,7 @@ class MainVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UISc
         setupLogo()
         setupSearchBar()
         setupTableView()
+        setupPopularTableView()
         
         setupLoadingAnimation()
         setupInitialAnimation()
@@ -51,6 +54,7 @@ class MainVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UISc
         startInitialAnimation()
         
         downloadAllData {
+            self.refreshUI()
             self.stopInitialAnimation()
         }
     }
@@ -75,12 +79,9 @@ class MainVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UISc
         button.isUserInteractionEnabled = true
         headerView.addSubview(button)
         
-        
         button.autoPinEdge(.left, to: .left, of: headerView, withOffset: 16)
         button.autoPinEdge(.top, to: .top, of: headerView, withOffset: 30)
-        
         button.autoSetDimensions(to: CGSize(width: 32, height: 32))
-        
         
     }
     
@@ -89,6 +90,7 @@ class MainVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UISc
             if (searching){
                 self.searchBar.text = ""
                 self.view.endEditing(true)
+                self.popularTableView.isHidden = true
                 self.searching = false
                 self.posts = []
                 self.page = 1
@@ -145,12 +147,35 @@ class MainVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UISc
         tableView.autoPinEdge(.right, to: .right, of: self.view, withOffset: 0)
         tableView.allowsSelection = false
         tableView.register(postCell.self, forCellReuseIdentifier: "postCell")
+        
+    }
+    
+    func setupPopularTableView() {
+        popularTableView.delegate = self
+        popularTableView.dataSource = self
+        self.view.addSubview(popularTableView)
+        
+        popularTableView.layer.cornerRadius = 10
+        popularTableView.clipsToBounds = true
+        
+        popularTableView.autoPinEdge(.top, to: .bottom, of: searchBar, withOffset: 0.0)
+        popularTableView.autoSetDimensions(to: CGSize(width: self.view.frame.width-16.0, height: 178.2))
+        popularTableView.autoPinEdge(.leading, to: .leading, of: self.view, withOffset: 8.0)
+        popularTableView.register(popularCell.self, forCellReuseIdentifier: "popularCell")
+        popularTableView.isHidden = true
+        popularTableView.allowsSelection = false
+        
     }
     
     
     //TABLE VIEW FUNCTIONS
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 375.0
+        if tableView == self.tableView {
+            return 375.0
+        }else {
+            return 30.0
+        }
+        
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -158,24 +183,53 @@ class MainVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UISc
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return posts.count
+        if tableView == self.tableView {
+            return posts.count
+        } else {
+            return tags.count
+        }
+        
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        if let cell = tableView.dequeueReusableCell(withIdentifier: "postCell", for: indexPath) as? postCell{
-            cell.updateFonts()
-            let post = posts[indexPath.row]
-            cell.configureCell(post: post)
-            
-            cell.setNeedsUpdateConstraints()
-            cell.updateConstraintsIfNeeded()
-            
-            return cell
+        if tableView == self.tableView {
+            if let cell = tableView.dequeueReusableCell(withIdentifier: "postCell", for: indexPath) as? postCell{
+                cell.updateFonts()
+                let post = posts[indexPath.row]
+                cell.configureCell(post: post)
+                
+                cell.setNeedsUpdateConstraints()
+                cell.updateConstraintsIfNeeded()
+                
+                return cell
+            } else {
+                return postCell()
+            }
         } else {
-            return postCell()
+            if let cell = tableView.dequeueReusableCell(withIdentifier: "popularCell") as?
+                popularCell {
+                cell.updateFonts()
+                cell.configureCell(tagName: tags[indexPath.row])
+                
+                cell.setNeedsUpdateConstraints()
+                cell.updateConstraintsIfNeeded()
+                
+                cell.preservesSuperviewLayoutMargins = false
+                cell.separatorInset = UIEdgeInsets.zero
+                cell.layoutMargins = UIEdgeInsets.zero
+                
+                return cell
+            }
+            
+            return popularCell()
         }
- 
+    }
+    
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        if tableView == self.popularTableView {
+            return "Popular Tags"
+        }
+        return ""
     }
     
     //SEARCH BAR
@@ -183,47 +237,60 @@ class MainVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UISc
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         query = searchBar.text!
         
-        if(query == "") {
-            searching = false
-        } else {
-            searching = true
-            posts = []
+        searching = true
+        posts = []
+        self.refreshUI()
+        self.view.endEditing(true)
+        self.page = 1
+        startInitialAnimation()
+        
+        downloadAllData {
+            self.stopInitialAnimation()
+            self.refreshUI()
+            self.tableView.setContentOffset(CGPoint(x: 0.0, y: 0.0) , animated: false)
         }
         
-        if(searching){
-            self.refreshUI()
-            self.view.endEditing(true)
-            self.page = 1
-            startInitialAnimation()
-            downloadAllData {
-                self.stopInitialAnimation()
-                self.refreshUI()
-                self.tableView.setContentOffset(CGPoint(x: 0.0, y: 0.0) , animated: false)
-            }
-        }
+        
+        popularTableView.isHidden = true
         
     }
     
+    
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        popularTableView.isHidden = true
         self.view.endEditing(true)
+        
     }
     
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-        let screenSize: CGRect = UIScreen.main.bounds
-        let myView = UIView(frame: CGRect(x: 0, y: 100, width: screenSize.width - 10, height: 10))
-        self.view.addSubview(myView)
+        if searchBar.text == "" {
+            popularTableView.isHidden = false
+        } else {
+            popularTableView.isHidden = true
+        }
+        
     }
 
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchBar.text == "" {
+            popularTableView.isHidden = false
+        } else {
+            popularTableView.isHidden = true
+        }
+    }
     
+   
     
     //DOWNLOAD PHOTOS
     func downloadAllData(completed: @escaping DownloadComplete) {
         downloadInitialData {
-            self.downloadProfileImagesData {
-                self.downloadProfileImages {
-                    self.downloadPostImagesData {
-                        self.downloadPostImages {
-                            completed()
+            self.downloadPopular {
+                self.downloadProfileImagesData {
+                    self.downloadProfileImages {
+                        self.downloadPostImagesData {
+                            self.downloadPostImages {
+                                completed()
+                            }
                         }
                     }
                 }
@@ -231,6 +298,35 @@ class MainVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UISc
         }
 
     }
+    
+    func downloadPopular(completed: @escaping DownloadComplete) {
+        print("ZYX: downloadPopular")
+        let url: String!
+        
+        url = "\(BASE_URL)\(HOT_LIST)\(API_KEY)\(FORMAT)&count=5"
+        
+        let hotURL = URL(string: url)!
+        
+        Alamofire.request(hotURL).responseJSON{ response in
+            let result = response.result
+            
+            if let dict = result.value as? Dictionary<String, AnyObject> {
+                
+                if let photosDict = dict["hottags"] as? Dictionary<String, AnyObject> {
+                    
+                    if let tagsArr = photosDict["tag"] as? [Dictionary<String, AnyObject>] {
+                        
+                        for tag in tagsArr {
+                            self.tags.append(tag["_content"] as! String)
+                            if(self.AllHotTagsDownloaded()){completed()}
+                        }
+                    }
+                }
+            }
+            completed()
+        }
+    }
+    
     func downloadInitialData(completed: @escaping DownloadComplete) {
         print("ZYX: downloadData")
         let url:String!
@@ -258,7 +354,6 @@ class MainVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UISc
                             self.posts.append(post)
                             print("ZYX: Downloading initial photo data")
                         }
-                        self.tableView.reloadData()
                     }
                 }
             }
@@ -279,7 +374,6 @@ class MainVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UISc
                         print("ZYX: Post Images downloaded")
                         post.postImage = image
                     }
-                    print("HMT: \(self.AllPostImagesDownloaded())")
                     if(self.AllPostImagesDownloaded()){completed()}
                 }
             }
@@ -439,6 +533,14 @@ class MainVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UISc
         return true
     }
     
+    func AllHotTagsDownloaded() -> Bool {
+        if tags.count == 5 {
+            return true
+        }
+        
+        return false
+    }
+    
     
     func getPostImageURL (farm: Int, server: String, id: String, secret: String) -> String{
         return "https://farm\(farm).staticflickr.com/\(server)/\(id)_\(secret).jpg"
@@ -465,7 +567,7 @@ class MainVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UISc
     
     func setupInitialAnimation() {
         isMoreDataLoading = false
-        let frame = CGRect(x: self.view.frame.width/2-10,
+        let frame = CGRect(x: self.view.frame.width/2-5,
                            y: 140,
                            width: tableView.bounds.size.width,
                            height: InfiniteScrollActivityView.defaultHeight)
@@ -522,6 +624,7 @@ class MainVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UISc
     
     func refreshUI() {
         DispatchQueue.main.async {
+            self.popularTableView.reloadData()
             self.tableView.reloadData()
         }
     }
