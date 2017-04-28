@@ -27,6 +27,7 @@ class MainVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UISc
     var initialAnimation: InfiniteScrollActivityView?
     var query: String = ""
     var searching: Bool = false
+    var popularDownloaded:  Bool = false
     
     var tableView: UITableView = UITableView()
     var popularTableView: UITableView = UITableView()
@@ -283,20 +284,34 @@ class MainVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UISc
     
     //DOWNLOAD PHOTOS
     func downloadAllData(completed: @escaping DownloadComplete) {
+        var profileCheck = false
+        var popularCheck = popularDownloaded
+        var postCheck = false
+        
         downloadInitialData {
-            self.downloadPopular {
-                self.downloadProfileImagesData {
-                    self.downloadProfileImages {
-                        self.downloadPostImagesData {
-                            self.downloadPostImages {
-                                completed()
-                            }
-                        }
-                    }
+            self.downloadProfileImagesData {
+                self.downloadProfileImages {
+                    profileCheck = true
+                    if popularCheck && postCheck {completed()}
+                }
+            }
+            
+            if(!popularCheck) {
+                self.downloadPopular {
+                    self.popularDownloaded = true
+                    popularCheck = true
+                    if profileCheck && postCheck {completed()}
+                }
+            }
+            
+            
+            self.downloadPostImagesData {
+                self.downloadPostImages {
+                    postCheck = true
+                    if popularCheck && profileCheck {completed()}
                 }
             }
         }
-
     }
     
     func downloadPopular(completed: @escaping DownloadComplete) {
